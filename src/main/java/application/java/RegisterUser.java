@@ -29,6 +29,7 @@ public class RegisterUser {
 
         // Create a CA client for interacting with the CA.
         Properties props = new Properties();
+        // 修改路径
         props.put("pemFile",
                 "test-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem");
         props.put("allowAllHostNames", "true");

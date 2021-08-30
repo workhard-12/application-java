@@ -21,9 +21,10 @@ import org.hyperledger.fabric.gateway.Wallets;
 
 public class App {
 
-    static {
-        System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
-    }
+    // 在本地（不是虚拟机上）使用这个客户端的时候不能有这句。
+//    static {
+//        System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
+//    }
 
     // helper function for getting connected to the gateway
     public static Gateway connect() throws Exception {
@@ -31,21 +32,22 @@ public class App {
         Path walletPath = Paths.get("wallet");
         Wallet wallet = Wallets.newFileSystemWallet(walletPath);
         // load a CCP
+        // 修改路径
         Path networkConfigPath = Paths.get("test-network", "organizations", "peerOrganizations", "org1.example.com", "connection-org1.json");
 
         Gateway.Builder builder = Gateway.createBuilder();
-        builder.identity(wallet, "admin").networkConfig(networkConfigPath).discovery(true);
+        builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);
         return builder.connect();
     }
 
     public static void main(String[] args) throws Exception {
         // enrolls the admin and registers the user
-//		try {
-//			EnrollAdmin.main(null);
-//			RegisterUser.main(null);
-//		} catch (Exception e) {
-//			System.err.println(e);
-//		}
+        try {
+            EnrollAdmin.main(null);
+            RegisterUser.main(null);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
 
         // connect to the network and invoke the smart contract
         try (Gateway gateway = connect()) {
@@ -64,14 +66,14 @@ public class App {
             System.out.println("Evaluate Transaction: GetAllAssets, result: " + new String(result));
 
             System.out.println("\n");
-            System.out.println("Submit Transaction: CreateAsset asset13");
+            System.out.println("Submit Transaction: CreateAsset asset14");
             //CreateAsset creates an asset with ID asset13, color yellow, owner Tom, size 5 and appraisedValue of 1300
-            contract.submitTransaction("CreateAsset", "asset13", "yellow", "5", "Tom", "1300");
+            contract.submitTransaction("CreateAsset", "asset14", "yellow", "5", "Tom", "1300");
 
             System.out.println("\n");
-            System.out.println("Evaluate Transaction: ReadAsset asset13");
+            System.out.println("Evaluate Transaction: ReadAsset asset14");
             // ReadAsset returns an asset with given assetID
-            result = contract.evaluateTransaction("ReadAsset", "asset13");
+            result = contract.evaluateTransaction("ReadAsset", "asset14");
             System.out.println("result: " + new String(result));
 
             System.out.println("\n");
